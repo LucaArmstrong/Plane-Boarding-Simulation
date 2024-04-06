@@ -6,13 +6,14 @@ public class Main {
     public static void main(String[] args) {
         int planeLength = 20;
         int seatNum = planeLength * 6;
+        simulation(planeLength);
     }
 
-    public void simulation(int planeLength) {
+    public static void simulation(int planeLength) {
         int seatNum = planeLength * 6;
         int[] indices = makeRandomSeatIndices(seatNum);
         Plane plane = new Plane(planeLength, indices);
-        Rendering Render = new Rendering(plane);
+        Rendering Render = new Rendering(plane, 1920, 1080);
         double dt = 0.5;
 
         // loop while not all passengers are seated
@@ -29,17 +30,16 @@ public class Main {
         }
     }
 
-    public int[] makeRandomSeatIndices(int seatNum) {
+    public static int[] makeRandomSeatIndices(int seatNum) {
         int[] indices = new int[seatNum];
         Arrays.fill(indices, -1);
         Random random = new Random();
-        int remainingIndices = seatNum;
 
-        for (int i = 0; i < seatNum; i++, remainingIndices--) {
-            int rand = random.nextInt(1, remainingIndices);
+        for (int i = 0; i < seatNum; i++) {
+            int rand = random.nextInt(1, seatNum - i + 1);
 
             for (int j = 0; rand > 0; j++) {
-                if (indices[i] == -1) rand--;
+                if (indices[j] == -1) rand--;
                 if (rand == 0) indices[j] = i;
             }
         }

@@ -1,5 +1,3 @@
-import java.util.Random;
-import java.util.Arrays;
 
 public class Plane {
     public static final int LUGGAGE_STORE_TIME = 20;

@@ -1,3 +1,11 @@
+class Location {
+    public int row, column;
+    public Location(int row, int column) {
+        this.row = row;
+        this.column = column;
+    }
+}
+
 public class Seat {
     public Location location;
     public boolean isOccupied;

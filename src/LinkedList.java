@@ -35,3 +35,11 @@ public class LinkedList {
         node.next = node.next.next;
     }
 }
+
+class Node {
+    public Passenger passenger;
+    public Node next;
+    public Node(Passenger passenger) {
+        this.passenger = passenger;
+    }
+}
