@@ -2,7 +2,8 @@ public class Passenger {
     public Seat targetSeat;
     public double row;
     public boolean inAisle;
-    public double timeUntilLuggageStored;
+    public double timeUntilLuggageStored = LUGGAGE_STORE_TIME;
+    public static final int LUGGAGE_STORE_TIME = 20;
 
     public Passenger(Seat targetSeat, int row) {
         this.targetSeat = targetSeat;
@@ -10,18 +11,8 @@ public class Passenger {
         this.inAisle = false;
     }
 
-    public boolean hasReachedSeatRow() {
-        return targetSeat.location.row <= this.row;  // current row is further to the right of the target row
-    }
-
-    public int storeLuggage() {
-        //return LUGGAGE_STORE_TIME;
-        return 0;
-    }
-
-    public int sitDown() {
+    public void sitDown() {
+        this.inAisle = false;
         this.targetSeat.isOccupied = true;
-        //return SIT_DOWN_TIME;
-        return 0;
     }
 }
