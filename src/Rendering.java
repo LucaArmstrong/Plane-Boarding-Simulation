@@ -1,5 +1,10 @@
 public class Rendering {
-    public Rendering() {
+    public Plane plane;
+    public Rendering(Plane plane) {
+        this.plane = plane;
+    }
+
+    public void renderPlane() {
 
     }
 }
