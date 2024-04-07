@@ -1,4 +1,4 @@
-public class LinkedList {
+public class PassengerList {
     Node head;
 
     public void add(Passenger passenger) {
@@ -16,13 +16,8 @@ public class LinkedList {
     public void delete(Passenger passenger) {
         Node node = this.head;
 
-        // delete head
-        if (this.head.passenger == passenger) {
-            this.head = this.head.next;
-            return;
-        }
-
-        // otherwise find node with passenger
+        // find node with passenger
+        // don't need to consider head as passengers.head is by definition the end of the plane (not a passenger)
         while(node.next.passenger != passenger) {
             node = node.next;
             if (node == null) {

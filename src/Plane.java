@@ -2,10 +2,11 @@
 public class Plane {
     public static final int LUGGAGE_STORE_TIME = 20;
     public static final double SLOW_MOVEMENT_SPEED = 1.5;
+    public static final double MIN_PASSENGER_SPACING = 0.2;
     public int planeLength;
     public int seatNum;
-    public Rendering Render;
-    public LinkedList passengers;
+    public PassengerList aislePassengers;
+
     public Plane(int planeLength, int[] passengerIndices) {
         this.planeLength = planeLength;
         this.seatNum = planeLength * 6;
@@ -18,7 +19,7 @@ public class Plane {
     }
 
     public boolean allPassengersSeated() {
-        return passengers.head.next == null;
+        return aislePassengers.head.next == null;
     }
 
     // moves the timeframe forward slightly
@@ -28,14 +29,14 @@ public class Plane {
         Passenger thisPassenger = node.next.passenger;
         Passenger inFrontPassenger = node.passenger;
 
-        double distanceToNextPassenger = inFrontPassenger.row - thisPassenger.row;
+        double distanceToNextPassenger = inFrontPassenger.row - thisPassenger.row - thisPassenger.PASSENGER_WIDTH;
         double distanceToTargetRow = thisPassenger.targetSeat.location.row - thisPassenger.row;
 
-        // still at beginning of simulation where all passengers are on the same row
-        if (distanceToNextPassenger < thisPassenger.PASSENGER_WIDTH) return;
+        // still at beginning of simulation where all passengers are too close together
+        if (distanceToNextPassenger < MIN_PASSENGER_SPACING) return;
 
         double speed = passengerSpeed(distanceToNextPassenger);
-        double potentialDistance = Math.min(distanceToNextPassenger, speed * dt);
+        double potentialDistance = Math.min(distanceToNextPassenger - MIN_PASSENGER_SPACING, speed * dt);
         double timeRemaining = dt;
 
         // do walking
@@ -61,16 +62,16 @@ public class Plane {
     }
 
     public void makePassengers(int[] passengerIndices) {
-        passengers = new LinkedList();
+        aislePassengers = new PassengerList();
 
         for (int i = 0; i < seatNum; i++) {
             int idx = passengerIndices[i];
             Location location = new Location(idx / 6, idx % 6);
             Seat seat = new Seat(location);
-            passengers.add(new Passenger(seat, -1));
+            aislePassengers.add(new Passenger(seat, -1));
         }
 
         // have an extra head node which acts as a reference to the end of the plane
-        passengers.add(new Passenger(null, seatNum));
+        aislePassengers.add(new Passenger(null, seatNum + MIN_PASSENGER_SPACING));
     }
 }
