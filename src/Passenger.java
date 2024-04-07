@@ -3,7 +3,7 @@ public class Passenger {
     public double row;
     public boolean inAisle;
     public double timeUntilLuggageStored = LUGGAGE_STORE_TIME;
-    public static final int LUGGAGE_STORE_TIME = 20;
+    public static final int LUGGAGE_STORE_TIME = 10; // 20 seconds
 
     /* width of a passenger */
     /* have the option in the future to add variable (random) widths as well as random speeds for a more accurate simulation */

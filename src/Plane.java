@@ -1,6 +1,5 @@
 
 public class Plane {
-    public static final int LUGGAGE_STORE_TIME = 20;
     public static final double SLOW_MOVEMENT_SPEED = 1;
     public static final double MIN_PASSENGER_SPACING = 0.4;
     public int planeLength;
@@ -24,6 +23,7 @@ public class Plane {
 
     // moves the timeframe forward slightly
     public void update(Node passengerNode, double dt) {
+        if (passengerNode == null) return;   // only need this for start condition when only one passenger is unseated
         if (passengerNode.next == null) return;
 
         Passenger thisPassenger = passengerNode.next.passenger;
