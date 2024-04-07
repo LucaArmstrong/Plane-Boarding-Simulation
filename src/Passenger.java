@@ -7,7 +7,7 @@ public class Passenger {
 
     /* width of a passenger */
     /* have the option in the future to add variable (random) widths as well as random speeds for a more accurate simulation */
-    public final double PASSENGER_WIDTH = 0.8;
+    public final double PASSENGER_WIDTH = 0.6;
 
     public Passenger(Seat targetSeat, double row) {
         this.targetSeat = targetSeat;

@@ -8,6 +8,9 @@ public class DrawingPanel extends JComponent {
     public int xPlane, yPlane, xAisle, yAisle;
     public int xSeatsAboveAisle, ySeatsAboveAisle, xSeatsBelowAisle, ySeatsBelowAisle;
 
+    @Override
+    public void paint (Graphics g) {}
+
     public DrawingPanel(int width, int height, int planeLength) {
         this.width = width;
         this.height = height;
@@ -31,7 +34,7 @@ public class DrawingPanel extends JComponent {
         this.xPlane = this.rowLength;
         this.yPlane = this.height/2 - this.rowLength * 4;
         this.xAisle = this.xPlane + this.rowLength/2;
-        this.yAisle = this.yPlane + this.rowLength * 3/2;
+        this.yAisle = this.yPlane + this.rowLength * 7/2;
 
         this.xSeatsAboveAisle = this.xAisle;
         this.ySeatsAboveAisle = this.yPlane + this.rowLength/2;
@@ -66,18 +69,18 @@ public class DrawingPanel extends JComponent {
         int radius = widthPixels / 2;
         int x = rowToX(row) + rowLength/2 - radius;
         int y = columnToY(column) + rowLength/2 - radius;
-        drawPassenger(x, y, radius, Color.green);
+        drawPassenger(x, y, widthPixels, Color.green);
     }
 
     public void drawAislePassenger(double row, double passengerWidth) {
         int rowPixels = rowToX(row);
         int widthPixels = (int)(passengerWidth * rowLength);
         int radius = widthPixels / 2;
-        drawPassenger(rowPixels, yAisle + rowLength/2 - radius, radius, Color.red);
+        drawPassenger(rowPixels, yAisle + rowLength/2 - radius, widthPixels, Color.red);
     }
 
-    private void drawPassenger(int x, int y, int radius, Color colour) {
-        Ellipse2D.Double passengerEllipse = new Ellipse2D.Double(x, y, radius, radius);
+    public void drawPassenger(int x, int y, int diameter, Color colour) {
+        Ellipse2D.Double passengerEllipse = new Ellipse2D.Double(x, y, diameter, diameter);
         initialiseGraphics();
         g2d.setColor(colour);
         g2d.fill(passengerEllipse);

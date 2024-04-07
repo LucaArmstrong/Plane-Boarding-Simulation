@@ -1,4 +1,6 @@
+import java.awt.*;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 
 public class Main {
@@ -11,18 +13,18 @@ public class Main {
         int seatNum = planeLength * 6;
         int[] indices = makeRandomSeatIndices(seatNum);
         Plane plane = new Plane(planeLength, indices);
-        Rendering renderObj = new Rendering(plane, 1760, 990);  // 1920, 1080
+        Rendering renderObj = new Rendering(plane, 1500, 750);  // 1920, 1080
         renderObj.renderPlane();
-        double dt = 0.5;
+        double dt = 0.1;
 
         // loop while not all passengers are seated
         for (int update = 0; !plane.allPassengersSeated(); update++) {
             plane.update(plane.aislePassengers.head, dt);    // update plane
-            if (update % 3 == 0) renderObj.renderPlane();  // render plane
+            renderObj.renderPlane();  // render plane
 
             // wait 0.1s for next animation update
             try {
-                Thread.sleep(100);
+                Thread.sleep(25);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

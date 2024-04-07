@@ -1,8 +1,8 @@
 
 public class Plane {
     public static final int LUGGAGE_STORE_TIME = 20;
-    public static final double SLOW_MOVEMENT_SPEED = 1.5;
-    public static final double MIN_PASSENGER_SPACING = 0.2;
+    public static final double SLOW_MOVEMENT_SPEED = 1;
+    public static final double MIN_PASSENGER_SPACING = 0.4;
     public int planeLength;
     public int seatNum;
     public PassengerList aislePassengers;
@@ -15,7 +15,7 @@ public class Plane {
     }
 
     public double passengerSpeed(double x /* distance to passenger in front (seat rows) */) {
-        return (1 - 1/(1+Math.exp(-x))) * 2.5 * SLOW_MOVEMENT_SPEED;
+        return (0.5 + 1/(1+Math.exp(-x))) * 2 * SLOW_MOVEMENT_SPEED;
     }
 
     public boolean allPassengersSeated() {
@@ -23,11 +23,11 @@ public class Plane {
     }
 
     // moves the timeframe forward slightly
-    public void update(Node node, double dt) {
-        if (node.next == null) return;
+    public void update(Node passengerNode, double dt) {
+        if (passengerNode.next == null) return;
 
-        Passenger thisPassenger = node.next.passenger;
-        Passenger inFrontPassenger = node.passenger;
+        Passenger thisPassenger = passengerNode.next.passenger;
+        Passenger inFrontPassenger = passengerNode.passenger;
 
         double distanceToNextPassenger = inFrontPassenger.row - thisPassenger.row - thisPassenger.PASSENGER_WIDTH;
         double distanceToTargetRow = thisPassenger.targetSeat.location.row - thisPassenger.row;
@@ -35,7 +35,7 @@ public class Plane {
         // still at beginning of simulation where all passengers are too close together
         if (distanceToNextPassenger < MIN_PASSENGER_SPACING) return;
 
-        double speed = passengerSpeed(distanceToNextPassenger);
+        double speed = passengerSpeed(distanceToNextPassenger - MIN_PASSENGER_SPACING);
         double potentialDistance = Math.min(distanceToNextPassenger - MIN_PASSENGER_SPACING, speed * dt);
         double timeRemaining = dt;
 
@@ -55,10 +55,11 @@ public class Plane {
             } else {
                 thisPassenger.timeUntilLuggageStored = 0;
                 thisPassenger.sitDown();
+                aislePassengers.delete(thisPassenger);
             }
         }
 
-        update(node.next, dt);
+        update(passengerNode.next, dt);
     }
 
     public void makePassengers(int[] passengerIndices) {

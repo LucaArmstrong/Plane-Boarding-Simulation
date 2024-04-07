@@ -31,8 +31,8 @@ public class Rendering {
     }
 
     public void renderPlane() {
-        this.panel.removeAll();
-        this.panel.drawPlane();
+        panel.removeAll();
+        panel.drawPlane();
 
         // give passengers in the aisle a colour of red
         // and passengers sitting down a colour of green
@@ -53,7 +53,7 @@ public class Rendering {
         // draw seated passengers
         for (int i = 0; i < plane.seatNum; i++) {
             if (!availableSeats.contains(i)) {
-                panel.drawSittingPassenger(i / 6, i % 6, 0.8);
+                panel.drawSittingPassenger(i / 6, i % 6, 0.6);
             }
         }
     }
