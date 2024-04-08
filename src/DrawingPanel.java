@@ -55,7 +55,7 @@ public class DrawingPanel extends JComponent {
         drawPlane(g2d);
 
         // give passengers in the aisle a colour of red
-        // and passengers sitting down a colour of green
+        // and passengers sitting down a colour of dark blue
         List<Integer> availableSeats = new ArrayList<Integer>();
 
         for (Node passengerNode = plane.aislePassengers.head.next; passengerNode != null; passengerNode = passengerNode.next) {
@@ -84,7 +84,7 @@ public class DrawingPanel extends JComponent {
         Rectangle2D.Double seatsBelowRect = new Rectangle2D.Double(xSeatsBelowAisle, ySeatsBelowAisle, rowLength * plane.planeLength, rowLength * 3);
 
         //initialiseGraphics();
-        g2d.setColor(Color.cyan);
+        g2d.setColor(Color.white);
         g2d.fill(planeRect);
 
         g2d.setColor(Color.lightGray);
@@ -105,7 +105,7 @@ public class DrawingPanel extends JComponent {
         int radius = widthPixels / 2;
         int x = rowToX(row) + rowLength/2 - radius;
         int y = columnToY(column) + rowLength/2 - radius;
-        drawPassenger(g2d, x, y, widthPixels, Color.green);
+        drawPassenger(g2d, x, y, widthPixels, new Color(9, 72, 219));
     }
 
     public void drawAislePassenger(Graphics2D g2d, double row, double passengerWidth) {
