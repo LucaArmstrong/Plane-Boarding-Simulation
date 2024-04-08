@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        int planeLength = 20;
+        int planeLength = 40;
         simulation(planeLength);
     }
 
@@ -12,11 +12,11 @@ public class Main {
         int[] indices = makeRandomSeatIndices(seatNum);
         Plane plane = new Plane(planeLength, indices);
         DrawingPanel panel = new DrawingPanel(plane, 1500, 750);  // 1920, 1080
-        double dt = 0.025;
+        double dt = 0.025 * 2;
 
         // loop while not all passengers are seated
         for (int update = 0; !plane.allPassengersSeated(); update++) {
-            plane.update(plane.aislePassengers.head, dt);    // update plane
+            plane.update(dt);    // update plane
             panel.repaint();    // repaint the plane
 
             // wait some duration for the next simulation update

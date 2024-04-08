@@ -12,7 +12,7 @@ public class Passenger {
     public Passenger(Seat targetSeat, double row) {
         this.targetSeat = targetSeat;
         this.row = row;
-        this.inAisle = false;
+        this.inAisle = true;
     }
 
     public void sitDown() {

@@ -56,24 +56,17 @@ public class DrawingPanel extends JComponent {
 
         // give passengers in the aisle a colour of red
         // and passengers sitting down a colour of dark blue
-        List<Integer> availableSeats = new ArrayList<Integer>();
 
-        for (Node passengerNode = plane.aislePassengers.head.next; passengerNode != null; passengerNode = passengerNode.next) {
-            Passenger passenger = passengerNode.passenger;
-
-            // add target seat to available seats
-            Location passengerLocation = passenger.targetSeat.location;
-            availableSeats.add(6 * passengerLocation.row + passengerLocation.column);
-
-            // render passenger in aisle but only if in plane
-            if (passenger.row < -0.5) continue;
-            drawAislePassenger(g2d, passenger.row, passenger.PASSENGER_WIDTH);
-        }
-
-        // draw seated passengers
         for (int i = 0; i < plane.seatNum; i++) {
-            if (!availableSeats.contains(i)) {
-                drawSittingPassenger(g2d, i / 6, i % 6, 0.6);
+            Passenger passenger = plane.passengers[i];
+
+            if (passenger.row < -0.5) continue;
+
+            if (passenger.inAisle) {
+                drawAislePassenger(g2d, passenger.row, passenger.PASSENGER_WIDTH);
+            } else {
+                Location passengerLocation = passenger.targetSeat.location;
+                drawSittingPassenger(g2d, passengerLocation.row, passengerLocation.column, 0.6);
             }
         }
     }
