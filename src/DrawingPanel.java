@@ -15,8 +15,6 @@ public class DrawingPanel extends JComponent {
         this.height = height;
         this.plane = plane;
 
-        MyFrame frame = new MyFrame(width, height, this);
-
         initPlaneValues();
     }
 

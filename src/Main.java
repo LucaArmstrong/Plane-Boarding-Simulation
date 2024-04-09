@@ -11,20 +11,22 @@ public class Main {
         int seatNum = planeLength * 6;
         int[] indices = makeRandomSeatIndices(seatNum);
         Plane plane = new Plane(planeLength, indices);
-        DrawingPanel panel = new DrawingPanel(plane, 1500, 750);  // 1920, 1080
 
-        double dt = 0.025 * 4;
+        Renderer renderer = new Renderer(plane, 1500, 750);  // 1920, 1080
+        renderer.renderFrame();
+
+        double dt = 0.025 * 2;
         double totalTime = 0;
 
         // loop while not all passengers are seated
         for (int update = 0; !plane.allPassengersSeated(); update++) {
             plane.update(dt);    // update plane
-            panel.repaint();    // repaint the plane
+            renderer.renderPlane();  // render the plane
             totalTime += dt;
 
             // wait some duration for the next simulation update
             try {
-                Thread.sleep(5);
+                Thread.sleep(25);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
