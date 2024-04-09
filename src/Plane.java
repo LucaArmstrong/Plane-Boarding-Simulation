@@ -1,7 +1,6 @@
 
 public class Plane {
-    public static final double SLOW_MOVEMENT_SPEED = 1;
-    public static final double MIN_PASSENGER_SPACING = 0.4;
+    public final double MIN_PASSENGER_SPACING = 0.2;
     public int planeLength;
     public int seatNum;
     public Passenger[] passengers;
@@ -13,13 +12,9 @@ public class Plane {
         makePassengers(passengerIndices);
     }
 
-    public double passengerSpeed(double x /* distance to passenger in front (seat rows) */) {
-        return (0.5 + 1/(1+Math.exp(-x))) * 2 * SLOW_MOVEMENT_SPEED;
-    }
-
     public boolean allPassengersSeated() {
         for (int i = 0; i < seatNum; i++) {
-            if (passengers[i].isSitting() == false) return false;
+            if (!passengers[i].isSitting()) return false;
         }
         return true;
     }
@@ -39,12 +34,13 @@ public class Plane {
             // distances are in row metric
             double distanceToNextPassenger = inFrontPassenger.row - thisPassenger.row - thisPassenger.PASSENGER_WIDTH;
             double distanceToTargetRow = thisPassenger.targetRow - thisPassenger.row;
+            double minimumDistance = inFrontPassenger.LUGGAGE_SPACING + MIN_PASSENGER_SPACING;
 
             // still at beginning of simulation where all passengers are too close together
-            if (distanceToNextPassenger < MIN_PASSENGER_SPACING) break;
+            if (distanceToNextPassenger < minimumDistance) break;
 
-            double speed = passengerSpeed(distanceToNextPassenger - MIN_PASSENGER_SPACING);
-            double potentialDistance = Math.min(distanceToNextPassenger - MIN_PASSENGER_SPACING, speed * dt);
+            double speed = Passenger.passengerSpeed(distanceToNextPassenger - minimumDistance);
+            double potentialDistance = Math.min(distanceToNextPassenger - minimumDistance, speed * dt);
             double timeRemaining = dt;
 
             // hasn't yet reached their target row
@@ -88,7 +84,6 @@ public class Plane {
             }
         }
     }
-
 
     public void makePassengers(int[] passengerIndices) {
         passengers = new Passenger[seatNum + 1];

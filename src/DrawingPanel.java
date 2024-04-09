@@ -30,7 +30,8 @@ public class DrawingPanel extends JComponent {
             RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
         );
 
-        renderPlane(g2d);
+        drawPlane(g2d);
+        renderPassengers(g2d);
     }
 
     private void initPlaneValues() {
@@ -41,19 +42,31 @@ public class DrawingPanel extends JComponent {
         // aisle width is one row length
         // plus 6 seats and a half row length border makes a height of 8 row lengths
         this.xPlane = this.rowLength;
-        this.yPlane = this.height/2 - this.rowLength * 4;
-        this.xAisle = this.xPlane + this.rowLength/2;
-        this.yAisle = this.yPlane + this.rowLength * 7/2;
+        this.yPlane = this.height / 2 - this.rowLength * 4;
+        this.xAisle = this.xPlane + this.rowLength / 2;
+        this.yAisle = this.yPlane + this.rowLength * 7 / 2;
 
         this.xSeatsAboveAisle = this.xAisle;
-        this.ySeatsAboveAisle = this.yPlane + this.rowLength/2;
+        this.ySeatsAboveAisle = this.yPlane + this.rowLength / 2;
         this.xSeatsBelowAisle = this.xAisle;
         this.ySeatsBelowAisle = this.yAisle + this.rowLength;
     }
 
-    public void renderPlane(Graphics2D g2d) {
-        drawPlane(g2d);
+    private void drawPlane(Graphics2D g2d) {
+        Rectangle2D.Double planeRect = new Rectangle2D.Double(xPlane, yPlane, rowLength * (plane.planeLength + 1), rowLength * 8);
+        Rectangle2D.Double seatsAboveRect = new Rectangle2D.Double(xSeatsAboveAisle, ySeatsAboveAisle, rowLength * plane.planeLength, rowLength * 3);
+        Rectangle2D.Double seatsBelowRect = new Rectangle2D.Double(xSeatsBelowAisle, ySeatsBelowAisle, rowLength * plane.planeLength, rowLength * 3);
 
+        //initialiseGraphics();
+        g2d.setColor(Color.white);
+        g2d.fill(planeRect);
+
+        g2d.setColor(Color.lightGray);
+        g2d.fill(seatsAboveRect);
+        g2d.fill(seatsBelowRect);
+    }
+
+    private void renderPassengers(Graphics2D g2d) {
         // give passengers in the aisle a colour of red
         // and passengers sitting down a colour of dark blue
 
@@ -69,29 +82,15 @@ public class DrawingPanel extends JComponent {
         }
     }
 
-    public void drawPlane(Graphics2D g2d) {
-        Rectangle2D.Double planeRect = new Rectangle2D.Double(xPlane, yPlane, rowLength * (plane.planeLength + 1), rowLength * 8);
-        Rectangle2D.Double seatsAboveRect = new Rectangle2D.Double(xSeatsAboveAisle, ySeatsAboveAisle, rowLength * plane.planeLength, rowLength * 3);
-        Rectangle2D.Double seatsBelowRect = new Rectangle2D.Double(xSeatsBelowAisle, ySeatsBelowAisle, rowLength * plane.planeLength, rowLength * 3);
-
-        //initialiseGraphics();
-        g2d.setColor(Color.white);
-        g2d.fill(planeRect);
-
-        g2d.setColor(Color.lightGray);
-        g2d.fill(seatsAboveRect);
-        g2d.fill(seatsBelowRect);
-    }
-
-    public int rowToX(double row) {
+    private int rowToX(double row) {
         return (int)(this.xAisle + row * this.rowLength);
     }
 
-    public int columnToY(int column) {
+    private int columnToY(int column) {
         return ySeatsAboveAisle + column * rowLength + (column >= 3 ? rowLength : 0);
     }
 
-    public void drawSittingPassenger(Graphics2D g2d, int row, int column, double passengerWidth) {
+    private void drawSittingPassenger(Graphics2D g2d, int row, int column, double passengerWidth) {
         int widthPixels = (int)(passengerWidth * rowLength);
         int radius = widthPixels / 2;
         int x = rowToX(row) + rowLength/2 - radius;
@@ -99,14 +98,14 @@ public class DrawingPanel extends JComponent {
         drawPassenger(g2d, x, y, widthPixels, new Color(9, 72, 219));
     }
 
-    public void drawAislePassenger(Graphics2D g2d, double row, double passengerWidth) {
+    private void drawAislePassenger(Graphics2D g2d, double row, double passengerWidth) {
         int rowPixels = rowToX(row);
         int widthPixels = (int)(passengerWidth * rowLength);
         int radius = widthPixels / 2;
         drawPassenger(g2d, rowPixels, yAisle + rowLength/2 - radius, widthPixels, Color.red);
     }
 
-    public void drawPassenger(Graphics2D g2d, int x, int y, int diameter, Color colour) {
+    private void drawPassenger(Graphics2D g2d, int x, int y, int diameter, Color colour) {
         Ellipse2D.Double passengerEllipse = new Ellipse2D.Double(x, y, diameter, diameter);
         g2d.setColor(colour);
         g2d.fill(passengerEllipse);
