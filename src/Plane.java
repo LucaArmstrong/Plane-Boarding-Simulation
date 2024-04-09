@@ -1,8 +1,7 @@
 
 public class Plane {
     public final double MIN_PASSENGER_SPACING = 0.2;
-    public int planeLength;
-    public int seatNum;
+    public int planeLength, seatNum;
     public Passenger[] passengers;
 
     public Plane(int planeLength, int[] passengerIndices) {
@@ -78,7 +77,6 @@ public class Plane {
                 }
 
                 // finish taking seat, is now sitting
-                timeRemaining -= thisPassenger.timeUntilSitting;
                 thisPassenger.timeUntilSitting = 0;
                 thisPassenger.sitDown();
             }

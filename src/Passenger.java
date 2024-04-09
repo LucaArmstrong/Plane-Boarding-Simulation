@@ -1,26 +1,18 @@
-import java.util.Random;
-
 public class Passenger {
     public int targetRow, targetColumn;
     public double row;
     public boolean hasLuggage;
+    public double timeUntilLuggageStored, timeUntilSitting;
+    public double PASSENGER_WIDTH, LUGGAGE_SPACING;
+    private final double LUGGAGE_PROBABILITY = 0.85;
+    private final double LUGGAGE_STORE_TIME = 15; // 20 seconds
+    private final double SITTING_TIME = 2; // 2 seconds to get out of aisle
+    private static final double SLOW_MOVEMENT_SPEED = 1;  // in rows per second
 
     private enum State {
         BOARDING, STOWING, TAKING_SEAT, SITTING
     }
-
     private State state;
-    public double timeUntilLuggageStored;
-    private final double LUGGAGE_PROBABILITY = 0.85;
-    private final int LUGGAGE_STORE_TIME = 15; // 20 seconds
-    public double timeUntilSitting;
-    private final double SITTING_TIME = 2; // 2 seconds to get out of aisle
-    private static final double SLOW_MOVEMENT_SPEED = 1;  // in rows per second
-
-    /* width of a passenger */
-    /* have the option in the future to add variable (random) widths as well as random speeds for a more accurate simulation */
-    //public final double PASSENGER_WIDTH = 0.6;
-    public double PASSENGER_WIDTH, LUGGAGE_SPACING;
 
     public Passenger(int targetRow, int targetColumn, double row) {
         this.targetRow = targetRow;

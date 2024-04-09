@@ -1,15 +1,14 @@
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JComponent;
 
 public class DrawingPanel extends JComponent {
     //public Graphics2D g2d;
-    public Plane plane;
-    public int width, height, rowLength;
-    public int xPlane, yPlane, xAisle, yAisle;
-    public int xSeatsAboveAisle, ySeatsAboveAisle, xSeatsBelowAisle, ySeatsBelowAisle;
+    private Plane plane;
+    private int width, height, rowLength;
+    private int xPlane, yPlane, xAisle, yAisle;
+    private int xSeatsAboveAisle, ySeatsAboveAisle;
+    private int xSeatsBelowAisle, ySeatsBelowAisle;
 
     public DrawingPanel(Plane plane, int width, int height) {
         this.width = width;
@@ -26,6 +25,7 @@ public class DrawingPanel extends JComponent {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
+        // antialiasing
         g2d.setRenderingHint(
             RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
         );
@@ -67,9 +67,6 @@ public class DrawingPanel extends JComponent {
     }
 
     private void renderPassengers(Graphics2D g2d) {
-        // give passengers in the aisle a colour of red
-        // and passengers sitting down a colour of dark blue
-
         for (int i = 0; i < plane.seatNum; i++) {
             Passenger passenger = plane.passengers[i];
             if (passenger.row < -0.5) continue;
