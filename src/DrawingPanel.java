@@ -59,14 +59,12 @@ public class DrawingPanel extends JComponent {
 
         for (int i = 0; i < plane.seatNum; i++) {
             Passenger passenger = plane.passengers[i];
-
             if (passenger.row < -0.5) continue;
 
-            if (passenger.inAisle) {
-                drawAislePassenger(g2d, passenger.row, passenger.PASSENGER_WIDTH);
+            if (passenger.isSitting()) {
+                drawSittingPassenger(g2d, passenger.targetRow, passenger.targetColumn, passenger.PASSENGER_WIDTH);
             } else {
-                Location passengerLocation = passenger.targetSeat.location;
-                drawSittingPassenger(g2d, passengerLocation.row, passengerLocation.column, 0.6);
+                drawAislePassenger(g2d, passenger.row, passenger.PASSENGER_WIDTH);
             }
         }
     }

@@ -19,7 +19,7 @@ public class Plane {
 
     public boolean allPassengersSeated() {
         for (int i = 0; i < seatNum; i++) {
-            if (passengers[i].inAisle) return false;
+            if (passengers[i].isSitting() == false) return false;
         }
         return true;
     }
@@ -33,12 +33,12 @@ public class Plane {
             Passenger inFrontPassenger = passengers[prevIndex];
 
             // this passenger is seated so move to next passenger
-            if (!thisPassenger.inAisle) continue;
+            if (thisPassenger.isSitting()) continue;
             prevIndex = index;
 
             // distances are in row metric
             double distanceToNextPassenger = inFrontPassenger.row - thisPassenger.row - thisPassenger.PASSENGER_WIDTH;
-            double distanceToTargetRow = thisPassenger.targetSeat.location.row - thisPassenger.row;
+            double distanceToTargetRow = thisPassenger.targetRow - thisPassenger.row;
 
             // still at beginning of simulation where all passengers are too close together
             if (distanceToNextPassenger < MIN_PASSENGER_SPACING) break;
@@ -47,22 +47,44 @@ public class Plane {
             double potentialDistance = Math.min(distanceToNextPassenger - MIN_PASSENGER_SPACING, speed * dt);
             double timeRemaining = dt;
 
-            // do walking
-            if (potentialDistance < distanceToTargetRow) {
-                // still walking in the aisle
-                thisPassenger.row += potentialDistance;
-            } else {
-                // walk to row
-                thisPassenger.row += distanceToTargetRow;
-                timeRemaining -= distanceToTargetRow / speed;
-
-                // time left to store luggage/sit down
-                double storingTime = Math.min(thisPassenger.timeUntilLuggageStored, timeRemaining);
-                thisPassenger.timeUntilLuggageStored -= storingTime;
-
-                if (thisPassenger.timeUntilLuggageStored == 0) {
-                    thisPassenger.sitDown();
+            // hasn't yet reached their target row
+            if (thisPassenger.isBoarding()) {
+                if (potentialDistance < distanceToTargetRow) {
+                    // still walking in aisle
+                    thisPassenger.row += potentialDistance;
+                    continue;
                 }
+
+                // walk to target row
+                thisPassenger.row = thisPassenger.targetRow;
+                timeRemaining -= distanceToTargetRow / speed;
+                thisPassenger.stowLuggage();
+            }
+
+            if (thisPassenger.isStowing()) {
+                if (timeRemaining < thisPassenger.timeUntilLuggageStored) {
+                    // still stowing luggage
+                    thisPassenger.timeUntilLuggageStored -= timeRemaining;
+                    continue;
+                }
+
+                // finish stowing luggage, take seat
+                timeRemaining -= thisPassenger.timeUntilLuggageStored;
+                thisPassenger.timeUntilLuggageStored = 0;
+                thisPassenger.takeSeat();
+            }
+
+            if (thisPassenger.isTakingSeat()) {
+                if (timeRemaining < thisPassenger.timeUntilSitting) {
+                    // still taking seat
+                    thisPassenger.timeUntilSitting -= timeRemaining;
+                    continue;
+                }
+
+                // finish taking seat, is now sitting
+                timeRemaining -= thisPassenger.timeUntilSitting;
+                thisPassenger.timeUntilSitting = 0;
+                thisPassenger.sitDown();
             }
         }
     }
@@ -73,12 +95,10 @@ public class Plane {
 
         for (int i = 0; i < seatNum; i++) {
             int idx = passengerIndices[i];
-            Location location = new Location(idx / 6, idx % 6);
-            Seat seat = new Seat(location);
-            passengers[i] = new Passenger(seat, -1);
+            passengers[i] = new Passenger(idx / 6, idx % 6, -1);
         }
 
         // have an extra head node which acts as a reference to the end of the plane
-        passengers[seatNum] = new Passenger(null, seatNum + MIN_PASSENGER_SPACING);
+        passengers[seatNum] = new Passenger(0, 0, seatNum + MIN_PASSENGER_SPACING);
     }
 }

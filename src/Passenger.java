@@ -1,22 +1,63 @@
+import java.util.Random;
+
 public class Passenger {
-    public Seat targetSeat;
+    public int targetRow, targetColumn;
     public double row;
-    public boolean inAisle;
-    public double timeUntilLuggageStored = LUGGAGE_STORE_TIME;
-    public static final int LUGGAGE_STORE_TIME = 10; // 20 seconds
+    public boolean hasLuggage;
+
+    private enum State {
+        BOARDING, STOWING, TAKING_SEAT, SITTING
+    }
+
+    public State state;
+    public double timeUntilLuggageStored;
+    private final double LUGGAGE_PROBABILITY = 0.85;
+    private final int LUGGAGE_STORE_TIME = 20; // 20 seconds
+    public double timeUntilSitting;
+    private final double SITTING_TIME = 2; // 2 seconds to get out of aisle
 
     /* width of a passenger */
     /* have the option in the future to add variable (random) widths as well as random speeds for a more accurate simulation */
-    public final double PASSENGER_WIDTH = 0.6;
+    //public final double PASSENGER_WIDTH = 0.6;
+    public double PASSENGER_WIDTH;
 
-    public Passenger(Seat targetSeat, double row) {
-        this.targetSeat = targetSeat;
+    public Passenger(int targetRow, int targetColumn, double row) {
+        this.targetRow = targetRow;
+        this.targetColumn = targetColumn;
         this.row = row;
-        this.inAisle = true;
+        this.state = State.BOARDING;
+
+        this.PASSENGER_WIDTH = 0.6; //random.nextDouble(0.5, 0.7);
+        this.hasLuggage = (Math.random() < LUGGAGE_PROBABILITY);
+        this.timeUntilLuggageStored = this.hasLuggage ? LUGGAGE_STORE_TIME : 3;
+        this.timeUntilSitting = SITTING_TIME;
+    }
+
+    public boolean isBoarding() {
+        return this.state == State.BOARDING;
+    }
+
+    public boolean isStowing() {
+        return this.state == State.STOWING;
+    }
+
+    public boolean isTakingSeat() {
+        return this.state == State.TAKING_SEAT;
+    }
+
+    public boolean isSitting() {
+        return this.state == State.SITTING;
+    }
+
+    public void takeSeat() {
+        this.state = State.TAKING_SEAT;
     }
 
     public void sitDown() {
-        this.inAisle = false;
-        this.targetSeat.isOccupied = true;
+        this.state = State.SITTING;
+    }
+
+    public void stowLuggage() {
+        this.state = State.STOWING;
     }
 }
